@@ -4,9 +4,18 @@ import sys
 import json
 
 DATABASE_NAME = "taskDB.json"
+ID_KEY = "id"
 NAME_KEY = "name"
 DONE_KEY = "isDone"
 TASKS_KEY = "allTasks"
+
+def generateIdFromTasks(tasks):
+    currentMaxID = 0
+    for t in tasks:
+        id = t[ID_KEY]
+        if currentMaxID < id:
+            currentMaxID = id
+    return currentMaxID+1
 
 
 def loadTasks():
@@ -29,6 +38,7 @@ def saveTasks(tasks):
 
 def add(tasks, taskName):
     tasks.append({
+        ID_KEY: generateIdFromTasks(tasks),
         NAME_KEY: taskName,
         DONE_KEY: None
     })
