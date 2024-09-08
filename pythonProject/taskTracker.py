@@ -27,10 +27,10 @@ def saveTasks(tasks):
         json.dump(tasksRecord, file, indent=4)
 
 
-def add(tasks):
+def add(tasks, taskName):
     tasks.append({
-        NAME_KEY: 'my first task',
-        DONE_KEY: False
+        NAME_KEY: taskName,
+        DONE_KEY: None
     })
 
 
@@ -62,7 +62,11 @@ def main():
     tasks = loadTasks()
     action = sys.argv[1]
     if action == "add":
-        add(tasks)
+        if len(sys.argv) == 3:
+            add(tasks, sys.argv[2])
+        else:
+            print("no valid task input detected")
+            exit(3)
     elif action == "update":
         update()
     elif action == "delete":
