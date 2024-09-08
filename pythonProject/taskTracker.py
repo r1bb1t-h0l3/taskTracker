@@ -37,11 +37,13 @@ def saveTasks(tasks):
 
 
 def add(tasks, taskName):
+    newTaskID = generateIdFromTasks(tasks)
     tasks.append({
-        ID_KEY: generateIdFromTasks(tasks),
+        ID_KEY: newTaskID,
         NAME_KEY: taskName,
         DONE_KEY: None
     })
+    print('added task: ' + taskName + ' |ID:' + str(newTaskID))
 
 
 def update():
