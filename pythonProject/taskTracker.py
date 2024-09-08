@@ -43,7 +43,7 @@ def add(tasks, taskName):
         NAME_KEY: taskName,
         DONE_KEY: None
     })
-    print('added task: ' + taskName + ' |ID:' + str(newTaskID))
+    print('added task: {} | ID: {}'.format(taskName, newTaskID))
 
 
 def update():
