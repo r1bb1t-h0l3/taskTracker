@@ -36,7 +36,7 @@ def saveTasks(tasks):
         json.dump(tasksRecord, file, indent=4)
 
 
-def add(tasks, taskName):
+def add(tasks: [str], taskName: str):
     newTaskID = generateIdFromTasks(tasks)
     tasks.append({
         ID_KEY: newTaskID,
@@ -46,8 +46,14 @@ def add(tasks, taskName):
     print('added task: {} | ID: {}'.format(taskName, newTaskID))
 
 
-def update():
-    print("update")
+def update(tasks: [str], taskID: int, taskName: str):
+    for t in tasks:
+        id = t[ID_KEY]
+        if id == taskID:
+            t[NAME_KEY] = taskName
+            print('updated task: {} | ID: {}'.format(taskName, taskID))
+            return
+    print(f"Current ID {taskID} doesn't exist")
 
 
 def delete():
@@ -80,7 +86,11 @@ def main():
             print("no valid task input detected")
             exit(3)
     elif action == "update":
-        update()
+        if len(sys.argv) == 4:
+            update(tasks, int(sys.argv[2]), sys.argv[3])
+        else:
+            print("no valid input detected")
+            exit(4)
     elif action == "delete":
         delete()
     elif action == "mark-in-progess":
