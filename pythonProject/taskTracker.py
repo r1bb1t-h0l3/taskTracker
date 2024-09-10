@@ -56,8 +56,23 @@ def update(tasks: [str], taskID: int, taskName: str):
     print(f"Current ID {taskID} doesn't exist")
 
 
-def delete():
-    print("delete")
+def delete(tasks: [str], taskID: int):
+    print(f"trying to delete task with taskId {taskID}")
+    #i = index
+    i = 0
+    while i < len(tasks):
+        print(f"i: {i}")
+        task = tasks[i]
+        id = task[ID_KEY]
+        print(f"id: {id}")
+        if id == taskID :
+            tasks.pop(i)
+            print("task {} successfully deleted".format(taskID))
+            return
+        else:
+            print(f"taskId {taskID} is not equal to id {id}! go to the next iteration")
+            i += 1
+    print(f"Current ID {taskID} doesn't exist")
 
 
 def markInProgress():
@@ -92,7 +107,11 @@ def main():
             print("no valid input detected")
             exit(4)
     elif action == "delete":
-        delete()
+        if len(sys.argv) == 3:
+            delete(tasks, int(sys.argv[2]))
+        else:
+            print("no valid input detected")
+            exit(4)
     elif action == "mark-in-progess":
         markInProgress()
     elif action == "mark-done":
