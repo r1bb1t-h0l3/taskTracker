@@ -83,8 +83,13 @@ def markDone():
     print("mark done")
 
 
-def list():
-    print("list")
+def list(tasks: [str]):
+    for task in tasks:
+        print(f"Task ID: {task[ID_KEY]}")
+        print(f"Task: {task[NAME_KEY]}")
+        print(f"Done: {task[DONE_KEY]}")
+        print('-' * 20)
+        
 
 
 def main():
@@ -117,7 +122,8 @@ def main():
     elif action == "mark-done":
         markDone()
     elif action == "list":
-        list()
+        if len(sys.argv) == 2:
+            list(tasks)
     else:
         print("unknown action")
         exit(2)
