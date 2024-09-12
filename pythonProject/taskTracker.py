@@ -3,11 +3,21 @@
 import sys
 import json
 
+
 DATABASE_NAME = "taskDB.json"
 ID_KEY = "id"
 NAME_KEY = "name"
 DONE_KEY = "isDone"
 TASKS_KEY = "allTasks"
+
+def printStatus(status):
+    if status is None:
+        return "not started"
+    elif bool(status):
+        return "done"
+    else:
+        return "in progress"
+
 
 def generateIdFromTasks(tasks):
     currentMaxID = 0
@@ -36,7 +46,7 @@ def saveTasks(tasks):
         json.dump(tasksRecord, file, indent=4)
 
 
-def add(tasks: [str], taskName: str):
+def add(tasks, taskName: str):
     newTaskID = generateIdFromTasks(tasks)
     tasks.append({
         ID_KEY: newTaskID,
@@ -46,7 +56,7 @@ def add(tasks: [str], taskName: str):
     print('added task: {} | ID: {}'.format(taskName, newTaskID))
 
 
-def update(tasks: [str], taskID: int, taskName: str):
+def update(tasks, taskID: int, taskName: str):
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -56,7 +66,7 @@ def update(tasks: [str], taskID: int, taskName: str):
     print(f"Current ID {taskID} doesn't exist")
 
 
-def delete(tasks: [str], taskID: int):
+def delete(tasks, taskID: int):
     print(f"trying to delete task with taskId {taskID}")
     #i = index
     i = 0
@@ -75,8 +85,14 @@ def delete(tasks: [str], taskID: int):
     print(f"Current ID {taskID} doesn't exist")
 
 
-def markInProgress():
-    print("mark in progress")
+def markInProgress(tasks, taskID: int):
+    for t in tasks:
+        id = t[ID_KEY]
+        if id == taskID:
+            t[DONE_KEY] = False
+            print(f"task{taskID} successfully marked IN PROGRESS")
+            return
+    print("no such task ID")
 
 
 def markDone():
@@ -87,10 +103,9 @@ def list(tasks: [str]):
     for task in tasks:
         print(f"Task ID: {task[ID_KEY]}")
         print(f"Task: {task[NAME_KEY]}")
-        print(f"Done: {task[DONE_KEY]}")
+        print(f"Status: {printStatus(task[DONE_KEY])}")
         print('-' * 20)
-        
-
+    
 
 def main():
     if len(sys.argv) <= 1:
@@ -117,8 +132,12 @@ def main():
         else:
             print("no valid input detected")
             exit(4)
-    elif action == "mark-in-progess":
-        markInProgress()
+    elif action == "mark-in-progress":
+        if len(sys.argv) == 3:
+            markInProgress(tasks, int(sys.argv[2]))
+        else:
+            print("no valid input detected")
+            exit(4)
     elif action == "mark-done":
         markDone()
     elif action == "list":
