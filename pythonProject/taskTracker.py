@@ -95,8 +95,14 @@ def markInProgress(tasks, taskID: int):
     print("no such task ID")
 
 
-def markDone():
-    print("mark done")
+def markDone(tasks, taskID: int):
+    for t in tasks:
+        id = t[ID_KEY]
+        if id == taskID:
+            t[DONE_KEY] = True
+            print(f"task{taskID} successfully marked DONE")
+            return
+    print("no such task ID")
 
 
 def list(tasks: [str]):
@@ -139,7 +145,11 @@ def main():
             print("no valid input detected")
             exit(4)
     elif action == "mark-done":
-        markDone()
+        if len(sys.argv) == 3:
+            markDone(tasks, int(sys.argv[2]))
+        else:
+            print("no valid input detected")
+            exit(4)
     elif action == "list":
         if len(sys.argv) == 2:
             list(tasks)
