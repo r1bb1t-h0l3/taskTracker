@@ -105,13 +105,24 @@ def markDone(tasks, taskID: int):
     print("no such task ID")
 
 
-def list(tasks: [str]):
+def list(tasks):
     for task in tasks:
         print(f"Task ID: {task[ID_KEY]}")
         print(f"Task: {task[NAME_KEY]}")
         print(f"Status: {printStatus(task[DONE_KEY])}")
         print('-' * 20)
-    
+
+def listInProgress(tasks):
+    taskFound = False
+    for task in tasks:
+        if task[DONE_KEY] == False:
+            taskFound = True
+            print(f"TaskID: {task[ID_KEY]}")
+            print(f"Task: {task[NAME_KEY]}")
+            print(f"Status: {printStatus(task[DONE_KEY])}")
+            print("-" * 20)
+    if taskFound == False:
+        print("no tasks in progress")
 
 def main():
     if len(sys.argv) <= 1:
@@ -153,9 +164,12 @@ def main():
     elif action == "list":
         if len(sys.argv) == 2:
             list(tasks)
-    else:
-        print("unknown action")
+        else:
+            print("unknown action")
         exit(2)
+    elif action == "list-in-progress":
+        if len(sys.argv) == 2:
+            listInProgress(tasks)
     saveTasks(tasks)
 
 if __name__ == "__main__":
