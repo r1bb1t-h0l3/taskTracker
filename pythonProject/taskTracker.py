@@ -8,6 +8,7 @@ DATABASE_NAME = "taskDB.json"
 ID_KEY = "id"
 NAME_KEY = "name"
 DONE_KEY = "isDone"
+PRIORITY_KEY = "priority"
 TASKS_KEY = "allTasks"
 
 def printStatus(status):
@@ -17,7 +18,6 @@ def printStatus(status):
         return "done"
     else:
         return "in progress"
-
 
 def generateIdFromTasks(tasks):
     currentMaxID = 0
@@ -33,7 +33,12 @@ def loadTasks():
         with open(DATABASE_NAME, 'r') as file:
             data = json.load(file)
 
-        return data[TASKS_KEY]
+        tasks = data[TASKS_KEY]
+        for task in tasks:
+            if PRIORITY_KEY not in task:
+                task[PRIORITY_KEY] = 1
+
+        return tasks
     except:
         return []
 
@@ -51,7 +56,8 @@ def add(tasks, taskName: str):
     tasks.append({
         ID_KEY: newTaskID,
         NAME_KEY: taskName,
-        DONE_KEY: None
+        DONE_KEY: None,
+        PRIORITY_KEY: 1
     })
     print('added task: {} | ID: {}'.format(taskName, newTaskID))
 
@@ -63,11 +69,18 @@ def update(tasks, taskID: int, taskName: str):
             t[NAME_KEY] = taskName
             print('updated task: {} | ID: {}'.format(taskName, taskID))
             return
-    print(f"Current ID {taskID} doesn't exist")
+    print(f"ID {taskID} doesn't exist")
 
+def updatePriority(tasks, taskID: int, priority: int):
+    for t in tasks:
+        id = t[ID_KEY]
+        if id == taskID:
+            t[PRIORITY_KEY] = priority
+            print(f"updated task priority. \nTaskID:{taskID}  |  Priority: {priority}")
+            return
+    print(f"ID {taskID} doesn't exist ")
 
 def delete(tasks, taskID: int):
-    print(f"trying to delete task with taskId {taskID}")
     #i = index
     i = 0
     while i < len(tasks):
@@ -110,6 +123,7 @@ def list(tasks):
         print(f"Task ID: {task[ID_KEY]}")
         print(f"Task: {task[NAME_KEY]}")
         print(f"Status: {printStatus(task[DONE_KEY])}")
+        print(f"Priority: {task[PRIORITY_KEY]}")
         print('-' * 20)
 
 def listInProgress(tasks):
@@ -120,6 +134,7 @@ def listInProgress(tasks):
             print(f"TaskID: {task[ID_KEY]}")
             print(f"Task: {task[NAME_KEY]}")
             print(f"Status: {printStatus(task[DONE_KEY])}")
+            print(f"Priority: {task[PRIORITY_KEY]}")
             print("-" * 20)
     if taskFound == False:
         print("no tasks in progress")
@@ -170,6 +185,12 @@ def main():
     elif action == "list-in-progress":
         if len(sys.argv) == 2:
             listInProgress(tasks)
+    elif action == "update-priority":
+        if len(sys.argv) == 4:
+            updatePriority(tasks, int(sys.argv[2]), int(sys.argv[3]))
+        else:
+            print("input priority")
+            exit(5)
     saveTasks(tasks)
 
 if __name__ == "__main__":
