@@ -126,7 +126,7 @@ def list(tasks: [dict]) -> None:
         print(f"Priority: {task[PRIORITY_KEY]}")
         print('-' * 20)
 
-def listInProgress(tasks: [dict]):
+def listInProgress(tasks: [dict]) -> None:
     taskFound = False
     for task in tasks:
         if task[DONE_KEY] == False:
