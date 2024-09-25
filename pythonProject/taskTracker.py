@@ -11,7 +11,7 @@ DONE_KEY = "isDone"
 PRIORITY_KEY = "priority"
 TASKS_KEY = "allTasks"
 
-def printStatus(status):
+def printStatus(status: bool) -> str:
     if status is None:
         return "not started"
     elif bool(status):
@@ -19,16 +19,16 @@ def printStatus(status):
     else:
         return "in progress"
 
-def generateIdFromTasks(tasks):
+def generateIdFromTasks(tasks: [dict]) -> int:
     currentMaxID = 0
     for t in tasks:
         id = t[ID_KEY]
         if currentMaxID < id:
             currentMaxID = id
-    return currentMaxID+1
+    return currentMaxID + 1
 
 
-def loadTasks():
+def loadTasks() -> [dict]:
     try:
         with open(DATABASE_NAME, 'r') as file:
             data = json.load(file)
@@ -43,7 +43,7 @@ def loadTasks():
         return []
 
 
-def saveTasks(tasks):
+def saveTasks(tasks: [dict]):
     tasksRecord = {
         TASKS_KEY: tasks
     }
@@ -51,7 +51,7 @@ def saveTasks(tasks):
         json.dump(tasksRecord, file, indent=4)
 
 
-def add(tasks, taskName: str):
+def add(tasks: [dict], taskName: str):
     newTaskID = generateIdFromTasks(tasks)
     tasks.append({
         ID_KEY: newTaskID,
@@ -62,7 +62,7 @@ def add(tasks, taskName: str):
     print('added task: {} | ID: {}'.format(taskName, newTaskID))
 
 
-def update(tasks, taskID: int, taskName: str):
+def update(tasks: [dict], taskID: int, taskName: str) -> None:
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -71,7 +71,7 @@ def update(tasks, taskID: int, taskName: str):
             return
     print(f"ID {taskID} doesn't exist")
 
-def updatePriority(tasks, taskID: int, priority: int):
+def updatePriority(tasks: [dict], taskID: int, priority: int) -> None:
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -80,7 +80,7 @@ def updatePriority(tasks, taskID: int, priority: int):
             return
     print(f"ID {taskID} doesn't exist ")
 
-def delete(tasks, taskID: int):
+def delete(tasks: [dict], taskID: int) -> None:
     #i = index
     i = 0
     while i < len(tasks):
@@ -98,7 +98,7 @@ def delete(tasks, taskID: int):
     print(f"Current ID {taskID} doesn't exist")
 
 
-def markInProgress(tasks, taskID: int):
+def markInProgress(tasks: [dict], taskID: int) -> None:
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -108,7 +108,7 @@ def markInProgress(tasks, taskID: int):
     print("no such task ID")
 
 
-def markDone(tasks, taskID: int):
+def markDone(tasks: [dict], taskID: int) -> None:
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -118,7 +118,7 @@ def markDone(tasks, taskID: int):
     print("no such task ID")
 
 
-def list(tasks):
+def list(tasks: [dict]) -> None:
     for task in tasks:
         print(f"Task ID: {task[ID_KEY]}")
         print(f"Task: {task[NAME_KEY]}")
@@ -126,7 +126,7 @@ def list(tasks):
         print(f"Priority: {task[PRIORITY_KEY]}")
         print('-' * 20)
 
-def listInProgress(tasks):
+def listInProgress(tasks: [dict]):
     taskFound = False
     for task in tasks:
         if task[DONE_KEY] == False:
