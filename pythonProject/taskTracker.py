@@ -12,6 +12,16 @@ PRIORITY_KEY = "priority"
 TASKS_KEY = "allTasks"
 
 def printStatus(status: bool) -> str:
+    """
+    Converts a task's status to a human-readable string.
+
+    Args:
+        status (bool): The status of the task (None, True, or False).
+
+    Returns:
+        str: "not started" if status is None, "done" if True, "in progress" if False.
+    """
+
     if status is None:
         return "not started"
     elif bool(status):
@@ -20,6 +30,15 @@ def printStatus(status: bool) -> str:
         return "in progress"
 
 def generateIdFromTasks(tasks: [dict]) -> int:
+    """
+    Generates a new unique task ID based on the existing tasks.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+
+    Returns:
+        int: A new unique ID for the next task.
+    """
     currentMaxID = 0
     for t in tasks:
         id = t[ID_KEY]
@@ -29,6 +48,12 @@ def generateIdFromTasks(tasks: [dict]) -> int:
 
 
 def loadTasks() -> [dict]:
+    """
+    Loads tasks from the JSON database file.
+
+    Returns:
+        list: A list of task dictionaries.
+    """
     try:
         with open(DATABASE_NAME, 'r') as file:
             data = json.load(file)
@@ -44,6 +69,12 @@ def loadTasks() -> [dict]:
 
 
 def saveTasks(tasks: [dict]):
+    """
+    Saves the current list of tasks to the JSON database file.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+    """
     tasksRecord = {
         TASKS_KEY: tasks
     }
@@ -52,6 +83,13 @@ def saveTasks(tasks: [dict]):
 
 
 def add(tasks: [dict], taskName: str):
+    """
+    Adds a new task to the task list.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+        taskName (str): The name of the new task.
+    """
     newTaskID = generateIdFromTasks(tasks)
     tasks.append({
         ID_KEY: newTaskID,
@@ -63,6 +101,14 @@ def add(tasks: [dict], taskName: str):
 
 
 def update(tasks: [dict], taskID: int, taskName: str) -> None:
+    """
+    Updates the name of a task.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+        taskID (int): The ID of the task to update.
+        taskName (str): The new name for the task.
+    """
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -72,6 +118,14 @@ def update(tasks: [dict], taskID: int, taskName: str) -> None:
     print(f"ID {taskID} doesn't exist")
 
 def updatePriority(tasks: [dict], taskID: int, priority: int) -> None:
+    """
+    Updates the priority of a task.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+        taskID (int): The ID of the task to update.
+        priority (int): The new priority level for the task.
+    """
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -81,6 +135,13 @@ def updatePriority(tasks: [dict], taskID: int, priority: int) -> None:
     print(f"ID {taskID} doesn't exist ")
 
 def delete(tasks: [dict], taskID: int) -> None:
+    """
+    Deletes a task from the task list.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+        taskID (int): The ID of the task to delete.
+    """
     #i = index
     i = 0
     while i < len(tasks):
@@ -99,6 +160,13 @@ def delete(tasks: [dict], taskID: int) -> None:
 
 
 def markInProgress(tasks: [dict], taskID: int) -> None:
+    """
+    Marks a task as 'in progress'.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+        taskID (int): The ID of the task to mark as 'in progress'.
+    """
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -109,6 +177,13 @@ def markInProgress(tasks: [dict], taskID: int) -> None:
 
 
 def markDone(tasks: [dict], taskID: int) -> None:
+    """
+    Marks a task as 'done'.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+        taskID (int): The ID of the task to mark as 'done'.
+    """
     for t in tasks:
         id = t[ID_KEY]
         if id == taskID:
@@ -119,6 +194,9 @@ def markDone(tasks: [dict], taskID: int) -> None:
 
 
 def list(tasks: [dict]) -> None:
+    """
+    Prints all tasks in the task list.
+    """
     for task in tasks:
         print(f"Task ID: {task[ID_KEY]}")
         print(f"Task: {task[NAME_KEY]}")
@@ -127,6 +205,9 @@ def list(tasks: [dict]) -> None:
         print('-' * 20)
 
 def listInProgress(tasks: [dict]) -> None:
+    """
+    Prints all tasks that are 'in progress'.
+    """
     taskFound = False
     for task in tasks:
         if task[DONE_KEY] == False:
@@ -140,8 +221,11 @@ def listInProgress(tasks: [dict]) -> None:
         print("no tasks in progress")
 
 def main():
+    """
+    Main function to handle user input and perform task operations.
+    """
     if len(sys.argv) <= 1:
-        print("invalid arguments")
+        print("no arguments detected")
         exit(1)
 
     tasks = loadTasks()
